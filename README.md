@@ -6,6 +6,6 @@ run server
 
 then connect it with windows cmd.
 
-telnet server_ip:8888 
+telnet server_ip 8888 
 
 name：yike passwd:ethyn
