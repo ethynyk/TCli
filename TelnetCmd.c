@@ -27,6 +27,8 @@ int cli_handle_arg(INT32 argc,char *argv[],void *pvReserve)
            TRACE_INFO("[%d]:%s\r\n",i,argv[i]);
        }
     }
+
+    return 0;
 }
 
 
@@ -35,6 +37,8 @@ int cli_printf_hello(INT32 argc,char *argv[],void *pvReserve)
 {
     
    g_bThreadRun = !g_bThreadRun;
+
+   return 0;
 }
 
 
@@ -79,7 +83,7 @@ int cli_GetVersion(INT32 argc,char *argv[],void *pvReserve)
    
     FILE *client = (FILE *)pvReserve;
     GetCompileTime();
-   return ;
+   return  0;
 }
 
 

@@ -61,6 +61,8 @@ int ShowCmd(TELNET_CLI_S_COMMAND *pstCliCmd,FILE *fp)
         #endif
         pstCliCmd = pstCliCmd->next;
     }
+
+    return 0;
 }
 
 int cli_Gethelp(TELNET_CLI_S_COMMAND *pstCliCmdCur,FILE *client)
