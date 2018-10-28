@@ -53,6 +53,7 @@ typedef struct TELNET_S_CLICMDtag
 
 extern INT32 RegisterCliCommand( void *pstCliCmd);
 extern void *connect_loop(void *ptr);
-extern void SystemCreateThread(int stack_size,PTHREAD_FUNC func,void *arg);
+extern int SystemCreateThread(pthread_t *thread_handle,int stack_size,PTHREAD_FUNC func,
+                            void *arg,const char *name,int sched_priority);
 
 #endif

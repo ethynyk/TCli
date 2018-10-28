@@ -1332,17 +1332,21 @@ void *TelnetServerThread(void *pArg)
 }
 
 
-void SystemCreateThread(int stack_size,PTHREAD_FUNC func,void *arg)
+
+
+
+int SystemCreateThread(pthread_t *thread_handle,int stack_size,PTHREAD_FUNC func,
+                            void *arg,const char *name,int sched_priority)
 {
     int iRet;
     pthread_attr_t attr;
-    pthread_t thread_id;
+    struct sched_param param;
 
     iRet = pthread_attr_init(&attr);
     if(0 != iRet)
     {
         DEBUG(printf("pthread_attr_init error\r\n"));
-        return ;
+        return iRet;
     }
 
     if (stack_size > 0) 
@@ -1352,26 +1356,32 @@ void SystemCreateThread(int stack_size,PTHREAD_FUNC func,void *arg)
         {
             DEBUG(printf("pthread_attr_setstacksize error\r\n"));
             goto ERROR;
-            return ;
         }
     }
 
-    iRet = pthread_create(&thread_id, &attr,func,arg);
+    pthread_attr_setschedpolicy(&attr,SCHED_RR);
+    pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
+    param.sched_priority = sched_priority;
+    pthread_attr_setschedparam(&attr,&param);
+    
+
+    iRet = pthread_create(thread_handle, &attr,func,arg);   
     if(0 != iRet)
     {
         DEBUG(printf("pthread_create error\r\n"));
-        return ;
+        goto ERROR;
     }
+    pthread_setname_np(*thread_handle,name);
 
     pthread_detach(pthread_self());
 ERROR:
     pthread_attr_destroy(&attr);
     //pthread_detach(thread_id);
-     return ;
+     return iRet;
 }
 
 
-
+static pthread_t sSystemServerHandle;
 
 void *connect_loop(void *ptr)
 {
@@ -1424,7 +1434,7 @@ void *connect_loop(void *ptr)
             break;
         }
         
-        SystemCreateThread(THREAD_STACK_SIZE,TelnetServerThread,(void *)&new_server_socket);
+        SystemCreateThread(&sSystemServerHandle,THREAD_STACK_SIZE,TelnetServerThread,(void *)&new_server_socket,"system_server",95);
 
         DEBUG(printf("new socket:%d\r\n",new_server_socket));
     }
