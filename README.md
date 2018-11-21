@@ -1,4 +1,4 @@
-CLI base on telnet
+command line base on telnet
 
 copy these code to ubuntu,and excute make
 
