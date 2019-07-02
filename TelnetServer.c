@@ -22,7 +22,7 @@
 ======`-.____`-.___\_____/___.-`____.-'======
                    `=---='
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-         ·ğ×æ±£ÓÓ       ÓÀÎŞBUG
+         ä½›ç¥–ä¿ä½‘       æ°¸æ— BUG
 
 *********************************************
 *            Made by Ethyn                  *
@@ -168,7 +168,7 @@ INT32 RegisterCliCommand(/*const*/ void *pstCliCmd)
 
 CLI_EN_RET TelnetCliChangeDirectoryName(CLI_S_CMD_DEF *pstCliCmdDefParam,TELNET_CLI_S_COMMAND *pstCliCmdCur,DIR_EN_CHANGE_MODE eMode)
 {
-    //²ÎÊı¼ì²âÍâÃæÒª×öºÃ
+    //å‚æ•°æ£€æµ‹å¤–é¢è¦åšå¥½
     TELNET_CLI_S_COMMAND *pCur = pstCliCmdCur;
     INT8 *pPrompt = pstCliCmdDefParam->acPrompt;
     INT8 *pPromptTmp = CLI_NULL;
@@ -231,7 +231,7 @@ void TelnetCmdFindCmdNode(const char *acString, TELNET_CLI_S_COMMAND *pstCurCmdl
     {
         while(pstCurCmdlistNode)
         {
-            DEBUG(printf("check name:%s,cur[%d]:%s\r\n",pArgv[0],i++,pstCurCmdlistNode->pcName));
+           // DEBUG(printf("check name:%s,cur[%d]:%s\r\n",pArgv[0],i++,pstCurCmdlistNode->pcName));
             if(!strncmp(acString,pstCurCmdlistNode->pcName,len))   
             {
                 bFound = TRUE;
@@ -255,7 +255,7 @@ void TelnetCmdFindCmdNode(const char *acString, TELNET_CLI_S_COMMAND *pstCurCmdl
     return;
 }
 
-/*ÃüÁîĞĞ·ÖÎöÈÎÎñ*/
+/*å‘½ä»¤è¡Œåˆ†æä»»åŠ¡*/
 CLI_EN_RET TelnetCliAnalyzeAndProcessCmd(FILE *client,
                                            TELNET_INPUT_DEF *pstTelnetInputDef,
                                            char *pcCmdString,
@@ -366,7 +366,7 @@ CLI_EN_RET TelnetCliAnalyzeAndProcessCmd(FILE *client,
 
     #if 0
     i = 0;
-    //±éÀúËùÓĞÃüÁî½Úµã
+    //éå†æ‰€æœ‰å‘½ä»¤èŠ‚ç‚¹
     while(pstCliCmd)
     {
         DEBUG(printf("check name:%s,cur[%d]:%s\r\n",pArgv[0],i++,pstCliCmd->pcName));
@@ -431,17 +431,17 @@ INT32 TelnetCliAddHistory(CLI_S_CMD_DEF *pstCliCmdDef, char *cmd)
 
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerInit
-*º¯Êı¹¦ÄÜÃèÊö £º TelnetServer³õÊ¼»¯
-*º¯Êı²ÎÊı £º ÎŞ
-*º¯Êı·µ»ØÖµ £º ÎŞ
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°å ï¼š TelnetServerInit
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š TelnetServeråˆå§‹åŒ–
+*å‡½æ•°å‚æ•° ï¼š æ— 
+*å‡½æ•°è¿”å›å€¼ ï¼š æ— 
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 void TelnetServerInit(void)
 {
@@ -464,17 +464,17 @@ void TelnetServerInit(void)
 }
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetShowCmdInfo
-*º¯Êı¹¦ÄÜÃèÊö £º ÏÔÊ¾telnetServer¶Ë¶Ô½ÓÊÕÃüÁîµÄ¹Ø¼üĞÅÏ¢£¬·½±ãµ÷ÊÔ
-*º¯Êı²ÎÊı £º TELNET_INPUT_DEF *pstTelnetCmd 
-*º¯Êı·µ»ØÖµ £º ÎŞ
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°å ï¼š TelnetShowCmdInfo
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š æ˜¾ç¤ºtelnetServerç«¯å¯¹æ¥æ”¶å‘½ä»¤çš„å…³é”®ä¿¡æ¯ï¼Œæ–¹ä¾¿è°ƒè¯•
+*å‡½æ•°å‚æ•° ï¼š TELNET_INPUT_DEF *pstTelnetCmd 
+*å‡½æ•°è¿”å›å€¼ ï¼š æ— 
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 void TelnetShowCmdInfo(TELNET_INPUT_DEF *pstTelnetCmd)
 {
@@ -495,19 +495,19 @@ void TelnetShowCmdInfo(TELNET_INPUT_DEF *pstTelnetCmd)
 }
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerSendToClient
-*º¯Êı¹¦ÄÜÃèÊö £º ·¢ËÍ¸ø¿Í»§¶ËµÄÊı¾İ
-*º¯Êı²ÎÊı £º iSocketId Óë¿Í»§¶ËÁ¬½ÓµÄsocketID
-             pcBuffer Òª·¢ËÍµÄÊı¾İ
-             ulSendLen Òª·¢ËÍµÄ³¤¶È
-*º¯Êı·µ»ØÖµ £º ÎŞ
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°å ï¼š TelnetServerSendToClient
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š å‘é€ç»™å®¢æˆ·ç«¯çš„æ•°æ®
+*å‡½æ•°å‚æ•° ï¼š iSocketId ä¸å®¢æˆ·ç«¯è¿æ¥çš„socketID
+             pcBuffer è¦å‘é€çš„æ•°æ®
+             ulSendLen è¦å‘é€çš„é•¿åº¦
+*å‡½æ•°è¿”å›å€¼ ï¼š æ— 
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 int TelnetServerSendToClient(int iSocketId,char *pcBuffer,unsigned int ulSendLen)
 {
@@ -552,18 +552,18 @@ int TelnetServerSendToClient(int iSocketId,char *pcBuffer,unsigned int ulSendLen
 
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerMoveClientCursor
-*º¯Êı¹¦ÄÜÃèÊö £º ÒÆ¶¯¿Í»§¶ËµÄ¹â±ê
-*º¯Êı²ÎÊı £º TELNET_INPUT_DEF *pstTelnetCmd
+*å‡½æ•°å ï¼š TelnetServerMoveClientCursor
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š ç§»åŠ¨å®¢æˆ·ç«¯çš„å…‰æ ‡
+*å‡½æ•°å‚æ•° ï¼š TELNET_INPUT_DEF *pstTelnetCmd
 			 CURSOR_E_SHIFT enShift
-*º¯Êı·µ»ØÖµ £º ÎŞ
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°è¿”å›å€¼ ï¼š æ— 
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT enShift)
 {
@@ -585,7 +585,7 @@ void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT 
     {
         if(pstTelnetCmd->ulCursorPos == pstTelnetCmd->ulEditLen)
         {
-            strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x30\x40",4); //ÏàµÈÔòÍùºóÒÆÒ»Î»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+            strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x30\x40",4); //ç›¸ç­‰åˆ™å¾€åç§»ä¸€ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
             pstTelnetCmd->ulSendLen += 4;
         }
         else if(pstTelnetCmd->ulEditLen > pstTelnetCmd->ulCursorPos)
@@ -597,7 +597,7 @@ void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT 
             pstTelnetCmd->ulEditLen - ulCurrentPos);
             pstTelnetCmd->ulSendLen +=  pstTelnetCmd->ulEditLen - ulCurrentPos;
             cMoveLeftPos[2] = '0'+ pstTelnetCmd->ulEditLen - ulCurrentPos;
-            strncat(pstTelnetCmd->acSendWord,cMoveLeftPos,4); //ÏàµÈÔòÍùÇ°ÒÆÎ»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+            strncat(pstTelnetCmd->acSendWord,cMoveLeftPos,4); //ç›¸ç­‰åˆ™å¾€å‰ç§»ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
             pstTelnetCmd->ulSendLen += 4;
         }
     }
@@ -613,7 +613,7 @@ void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT 
 
         }
 
-        pstTelnetCmd->acSendWord[pstTelnetCmd->ulSendLen] = 0x20;//¿Õ×Ö·û
+        pstTelnetCmd->acSendWord[pstTelnetCmd->ulSendLen] = 0x20;//ç©ºå­—ç¬¦
 
         cMoveLeftPos[2] = '0'+ pstTelnetCmd->ulEditLen - ulCurrentPos +1;
         strncpy(pstTelnetCmd->acSendWord+strlen(pstTelnetCmd->acSendWord),cMoveLeftPos,4); 
@@ -625,25 +625,25 @@ void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT 
         {
             case CURSOR_EN_LEFT:
             {
-                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x44",3); //ÏàµÈÔòÍùºóÒÆÒ»Î»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x44",3); //ç›¸ç­‰åˆ™å¾€åç§»ä¸€ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
                 pstTelnetCmd->ulSendLen += 3;
                 break;
             }
             case CURSOR_EN_RIGHT:
             {
-                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x43",3); //ÏàµÈÔòÍùºóÒÆÒ»Î»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x43",3); //ç›¸ç­‰åˆ™å¾€åç§»ä¸€ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
                 pstTelnetCmd->ulSendLen += 3;
                 break;
             }
             case CURSOR_EN_UP:
             {
-                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x41",3); //ÏàµÈÔòÍùºóÒÆÒ»Î»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x41",3); //ç›¸ç­‰åˆ™å¾€åç§»ä¸€ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
                 pstTelnetCmd->ulSendLen += 3;
                 break;
             }
             case CURSOR_EN_DOWN:
             {
-                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x42",3); //ÏàµÈÔòÍùºóÒÆÒ»Î»£¬ÔÚ×îºóÌí¼Ó ESC [ 0 C
+                strncat(pstTelnetCmd->acSendWord,"\x1b\x5b\x42",3); //ç›¸ç­‰åˆ™å¾€åç§»ä¸€ä½ï¼Œåœ¨æœ€åæ·»åŠ  ESC [ 0 C
                 pstTelnetCmd->ulSendLen += 3;
                 break;
             }
@@ -658,18 +658,18 @@ void TelnetServerMoveClientCursor(TELNET_INPUT_DEF *pstTelnetCmd,CURSOR_E_SHIFT 
 }
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerAddaWord
-*º¯Êı¹¦ÄÜÃèÊö £º ½«ÊäÈëµÄ×Ö·ûÌí¼Óµ½pstTelnetCmd
-*º¯Êı²ÎÊı £º char cWord ´ı´¦ÀíµÄ×Ö·û
+*å‡½æ•°å ï¼š TelnetServerAddaWord
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š å°†è¾“å…¥çš„å­—ç¬¦æ·»åŠ åˆ°pstTelnetCmd
+*å‡½æ•°å‚æ•° ï¼š char cWord å¾…å¤„ç†çš„å­—ç¬¦
             TELNET_INPUT_DEF *pstTelnetCmd
-*º¯Êı·µ»ØÖµ £º 1»ò0
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2017.03.17
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°è¿”å›å€¼ ï¼š 1æˆ–0
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2017.03.17
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 void TelnetServerAddaWord(char cWord,TELNET_INPUT_DEF *pstTelnetCmd)
 {
@@ -707,7 +707,7 @@ void TelnetServerHistoryCmd(TELNET_INPUT_DEF *pstTelnetCmd,CLI_CMD_S_HISTORY_PTR
     if(CLI_NULL != pstCliCmdHistory->pcCur)
     {
         memset(pstTelnetCmd->acSendWord,0,sizeof(SEND_LENGTH * sizeof(INT8)));
-        if(pstTelnetCmd->ulCursorPos)//Î»ÖÃÎª0Ê±²»ÄÜÌí¼Ó£¬·ñÔòÈÔ»áÒÆ¶¯ÏòÇ°ÒÆ¶¯Ò»Î»
+        if(pstTelnetCmd->ulCursorPos)//ä½ç½®ä¸º0æ—¶ä¸èƒ½æ·»åŠ ï¼Œå¦åˆ™ä»ä¼šç§»åŠ¨å‘å‰ç§»åŠ¨ä¸€ä½
         {
             cCleanWord[2] = '0'+pstTelnetCmd->ulCursorPos;
             memcpy(pstTelnetCmd->acSendWord,cCleanWord,4);
@@ -735,18 +735,18 @@ void TelnetServerHistoryCmd(TELNET_INPUT_DEF *pstTelnetCmd,CLI_CMD_S_HISTORY_PTR
 }
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerProcessSingleChar
-*º¯Êı¹¦ÄÜÃèÊö £º ´¦Àíµ¥¸ö×Ö·û£¬·µ»Ø1±íÊ¾ÃüÁî»¹Ã»ÓĞ´¦ÀíÍê£¬·µ»Ø0±íÊ¾ÊäÈëÁË»Ø³µ¼ü£¬ÃüÁî´¦ÀíÍê±Ï
-*º¯Êı²ÎÊı £º char cWord ´ı´¦ÀíµÄ×Ö·û
+*å‡½æ•°å ï¼š TelnetServerProcessSingleChar
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š å¤„ç†å•ä¸ªå­—ç¬¦ï¼Œè¿”å›1è¡¨ç¤ºå‘½ä»¤è¿˜æ²¡æœ‰å¤„ç†å®Œï¼Œè¿”å›0è¡¨ç¤ºè¾“å…¥äº†å›è½¦é”®ï¼Œå‘½ä»¤å¤„ç†å®Œæ¯•
+*å‡½æ•°å‚æ•° ï¼š char cWord å¾…å¤„ç†çš„å­—ç¬¦
             TELNET_INPUT_DEF *pstTelnetCmd
-*º¯Êı·µ»ØÖµ £º 1»ò0
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°è¿”å›å€¼ ï¼š 1æˆ–0
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_S_CMD_DEF *pstCliCmdCurDef)
 {
@@ -786,9 +786,9 @@ int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_
         return 0;
     }
 
-    if(KEY_TAB == cWord) //tab ÊµÏÖÃüÁî×Ô¶¯²¹È«
+    if(KEY_TAB == cWord) //tab å®ç°å‘½ä»¤è‡ªåŠ¨è¡¥å…¨
     {
-        //fix me,¿½±´Ì«¶à£¬ÁíÉêÇëµÄ±äÁ¿Ì«´ó£¬½¨ÒéÌí¼ÓÌæ´ústrtok_rµÄº¯Êı
+        //fix me,æ‹·è´å¤ªå¤šï¼Œå¦ç”³è¯·çš„å˜é‡å¤ªå¤§ï¼Œå»ºè®®æ·»åŠ æ›¿ä»£strtok_rçš„å‡½æ•°
         if(0 == pstTelnetCmd->ulEditLen)
         {
             return 1;
@@ -836,9 +836,10 @@ int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_
             }
         }
     }
-    if((cWord >= 0x20) && (cWord < 0x7f) && (KEY_INPUT_NORMAL == pstTelnetCmd->enCurrentStatus))
+    if((cWord >= 0x20) && (cWord < 0x7f) && (KEY_INPUT_NORMAL == pstTelnetCmd->enCurrentStatus))
+
     {
-        if(strlen(pstTelnetCmd->acEditWord +1) > 100) //×Ö´®×î´ó³¤¶È
+        if(strlen(pstTelnetCmd->acEditWord +1) > 100) //å­—ä¸²æœ€å¤§é•¿åº¦
         {
             return 1;
         }
@@ -894,7 +895,7 @@ int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_
             else if((KEY_INPUT_DIRECTION == pstTelnetCmd->enLastCurrentStatus)
             &&(KEY_INPUT_DIRECTION_FINAL == pstTelnetCmd->enCurrentStatus))
             {
-                if('D' == cWord) //ÏòÇ°1Î»
+                if('D' == cWord) //å‘å‰1ä½
                 {
                     if(pstTelnetCmd->ulCursorPos)
                     {
@@ -903,7 +904,7 @@ int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_
                         TelnetServerMoveClientCursor(pstTelnetCmd,CURSOR_EN_LEFT);
                     }
                 }
-                else if('C' == cWord) //Ïòºó
+                else if('C' == cWord) //å‘å
                 {
                     if(pstTelnetCmd->ulCursorPos < strlen(pstTelnetCmd->acEditWord))
                     {
@@ -952,18 +953,18 @@ int TelnetServerProcessSingleChar(char cWord,TELNET_INPUT_DEF *pstTelnetCmd,CLI_
 
 
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerProcessSingleChar
-*º¯Êı¹¦ÄÜÃèÊö £º ´¦ÀíÒ»¸ö°´¼ü£¬·µ»Ø1±íÊ¾ÃüÁî»¹Ã»ÓĞ´¦ÀíÍê£¬·µ»Ø0±íÊ¾ÊäÈëÁË»Ø³µ¼ü£¬ÃüÁî´¦ÀíÍê±Ï
-*º¯Êı²ÎÊı £º char cWord ´ı´¦ÀíµÄ×Ö·û
+*å‡½æ•°å ï¼š TelnetServerProcessSingleChar
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼š å¤„ç†ä¸€ä¸ªæŒ‰é”®ï¼Œè¿”å›1è¡¨ç¤ºå‘½ä»¤è¿˜æ²¡æœ‰å¤„ç†å®Œï¼Œè¿”å›0è¡¨ç¤ºè¾“å…¥äº†å›è½¦é”®ï¼Œå‘½ä»¤å¤„ç†å®Œæ¯•
+*å‡½æ•°å‚æ•° ï¼š char cWord å¾…å¤„ç†çš„å­—ç¬¦
              TELNET_INPUT_DEF *pstTelnetCmd
-*º¯Êı·µ»ØÖµ £º 1»ò0
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°è¿”å›å€¼ ï¼š 1æˆ–0
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 int TelnetServerProcessOneKey(char *pcUserInput,
                                         unsigned int ulInputLen,
@@ -981,24 +982,24 @@ int TelnetServerProcessOneKey(char *pcUserInput,
 
 
 /*
-*²ÎÊı0±íÊ¾socketID
-* ²ÎÊı1ÓÃÀ´±¸·İÓÃ»§ÊäÈëµÄÃüÁîĞĞ×Ö·û´®
-* ²ÎÊı2ÊäÈëÊ±±íÊ¾²ÎÊı1µÄ×î´ó³¤¶È£¬·ÀÖ¹¿½±´Ô½½ç£¬Êä³öÓÃ×÷ÃüÁîĞĞµÄ³¤¶È 
+*å‚æ•°0è¡¨ç¤ºsocketID
+* å‚æ•°1ç”¨æ¥å¤‡ä»½ç”¨æˆ·è¾“å…¥çš„å‘½ä»¤è¡Œå­—ç¬¦ä¸²
+* å‚æ•°2è¾“å…¥æ—¶è¡¨ç¤ºå‚æ•°1çš„æœ€å¤§é•¿åº¦ï¼Œé˜²æ­¢æ‹·è´è¶Šç•Œï¼Œè¾“å‡ºç”¨ä½œå‘½ä»¤è¡Œçš„é•¿åº¦ 
 */
 /***********************************************************************************************
-*º¯ÊıÃû £º TelnetServerReadUserCommand
-*º¯Êı¹¦ÄÜÃèÊö £º¶ÁÈ¡ÓÃ»§ÊäÈëµÄÒ»ĞĞ×Ö·û´®
-*º¯Êı²ÎÊı £º int iSocketId Ì×½Ó×ÖID
-			 OUT char *pcUserInput ÓÃÓÚ´æ´¢ÓÃ»§ÊäÈëµÄ×Ö´®
-			 unsigned int *pulInputLen ÓÃ»§ÊäÈëµÄ³¤¶È,×¢Òâ£¬´Ë²ÎÊıÒ²×÷ÔÊĞíµÄ×î´ó³¤¶ÈÖµ
-*º¯Êı·µ»ØÖµ £º 1»ò0
-*×÷Õß £ºÒ×¿Æ
-*º¯Êı´´½¨ÈÕÆÚ £º 2016.08.10
-*º¯ÊıĞŞ¸ÄÈÕÆÚ £º 
-*ĞŞ¸ÄÈË £º
-*ĞŞ¸ÄÔ­Òò £º 
-*°æ±¾ £º 
-*ÀúÊ·°æ±¾ £º 
+*å‡½æ•°å ï¼š TelnetServerReadUserCommand
+*å‡½æ•°åŠŸèƒ½æè¿° ï¼šè¯»å–ç”¨æˆ·è¾“å…¥çš„ä¸€è¡Œå­—ç¬¦ä¸²
+*å‡½æ•°å‚æ•° ï¼š int iSocketId å¥—æ¥å­—ID
+			 OUT char *pcUserInput ç”¨äºå­˜å‚¨ç”¨æˆ·è¾“å…¥çš„å­—ä¸²
+			 unsigned int *pulInputLen ç”¨æˆ·è¾“å…¥çš„é•¿åº¦,æ³¨æ„ï¼Œæ­¤å‚æ•°ä¹Ÿä½œå…è®¸çš„æœ€å¤§é•¿åº¦å€¼
+*å‡½æ•°è¿”å›å€¼ ï¼š 1æˆ–0
+*ä½œè€… ï¼šæ˜“ç§‘
+*å‡½æ•°åˆ›å»ºæ—¥æœŸ ï¼š 2016.08.10
+*å‡½æ•°ä¿®æ”¹æ—¥æœŸ ï¼š 
+*ä¿®æ”¹äºº ï¼š
+*ä¿®æ”¹åŸå›  ï¼š 
+*ç‰ˆæœ¬ ï¼š 
+*å†å²ç‰ˆæœ¬ ï¼š 
 ***********************************************************************************************/
 CLI_EN_RET TelnetServerReadUserCommand(int iSocketId,
                                                     OUT char *pcUserInput,
@@ -1036,7 +1037,7 @@ CLI_EN_RET TelnetServerReadUserCommand(int iSocketId,
         enRet =  KTSocketRecv(iSocketId,&cKey,1,NULL,&ulLen);
         if(CLI_OK != enRet)
         {
-            //FREE_MEM(pstTelnetCmd); //×¢:ÕâÀïÊÍ·Å£¬ÍâÃæµÄpstTelnetCmdµÄµØÖ·ÈÔÈ»·Ç0£¬³ı·ÇÓÃË«Ö¸Õë
+            //FREE_MEM(pstTelnetCmd); //æ³¨:è¿™é‡Œé‡Šæ”¾ï¼Œå¤–é¢çš„pstTelnetCmdçš„åœ°å€ä»ç„¶é0ï¼Œé™¤éç”¨åŒæŒ‡é’ˆ
             return enRet;
         }
         
@@ -1059,7 +1060,7 @@ CLI_EN_RET TelnetServerReadUserCommand(int iSocketId,
         if(pstTelnetCmd->ulSendLen && INPUT_E_NORMAL == enMode)
         {
             DEBUG(printf("onekey_to_client[%d]:%s\r\n",pstTelnetCmd->ulSendLen,pstTelnetCmd->acSendWord));
-            //·¢ËÍµÄ³¤¶È´óÓÚ0ĞèÒª·¢ËÍ¸ø¿Í»§¶Ë½øĞĞ»ØÏÔ
+            //å‘é€çš„é•¿åº¦å¤§äº0éœ€è¦å‘é€ç»™å®¢æˆ·ç«¯è¿›è¡Œå›æ˜¾
             (void)TelnetServerSendToClient(iSocketId,pstTelnetCmd->acSendWord,pstTelnetCmd->ulSendLen);
         }
 
@@ -1074,9 +1075,9 @@ CLI_EN_RET TelnetServerReadUserCommand(int iSocketId,
         }
 
 
-        if(0 == iRet) //ÃüÁî´¦ÀíÍê±Ï
+        if(0 == iRet) //å‘½ä»¤å¤„ç†å®Œæ¯•
         {
-            //½«ÊäÈëµÄÃüÁîĞĞ×Ö·û´®¿½±´¸ø²ÎÊı1£¬½«³¤¶È¸½¸ø²ÎÊı2
+            //å°†è¾“å…¥çš„å‘½ä»¤è¡Œå­—ç¬¦ä¸²æ‹·è´ç»™å‚æ•°1ï¼Œå°†é•¿åº¦é™„ç»™å‚æ•°2
             if(CMD_BUF_LEN < pstTelnetCmd->ulEditLen)
             {
                 pstTelnetCmd->ulEditLen = CMD_BUF_LEN;
@@ -1115,7 +1116,7 @@ CLI_EN_RET TelnetServerCheckLoginFunc(int iNewSocketId)
     {
         TelnetServerSendToClient(iNewSocketId,stTelnetLoginWord.acUsername,strlen(stTelnetLoginWord.acUsername));
 
-        //¶ÁÈ¡ÓÃ»§Ãû
+        //è¯»å–ç”¨æˆ·å
         enRet = TelnetServerReadUserCommand(iNewSocketId,acUserName,pstTelnetCmd,&ulNameLen,INPUT_E_NORMAL,CLI_NULL);
         if(CLI_OK != enRet)
         {
@@ -1129,7 +1130,7 @@ CLI_EN_RET TelnetServerCheckLoginFunc(int iNewSocketId)
         TelnetServerSendToClient(iNewSocketId,NEW_LINE,strlen(NEW_LINE));
         TelnetServerSendToClient(iNewSocketId,stTelnetLoginWord.acPassword,strlen(stTelnetLoginWord.acPassword));
 
-        //¶ÁÈ¡ÃÜÂë
+        //è¯»å–å¯†ç 
         enRet = TelnetServerReadUserCommand(iNewSocketId,acPassWord,pstTelnetCmd,&ulPasswdLen,INPUT_E_HIDE,CLI_NULL);
         if(CLI_OK != enRet)
         {
@@ -1141,7 +1142,7 @@ CLI_EN_RET TelnetServerCheckLoginFunc(int iNewSocketId)
         DEBUG(printf("****Read[%d]:%s\r\n",ulPasswdLen,acPassWord));
         TelnetServerSendToClient(iNewSocketId,NEW_LINE,strlen(NEW_LINE));
 
-        //ÑéÖ¤ÓÃ»§ÃûºÍÃÜÂë
+        //éªŒè¯ç”¨æˆ·åå’Œå¯†ç 
 
         ulUserNameLen = strlen(SYS_USERNAME);
         ulPasswdLen = strlen(SYS_PASSWORD);
@@ -1360,7 +1361,7 @@ int SystemCreateThread(pthread_t *thread_handle,int stack_size,PTHREAD_FUNC func
     }
 
     pthread_attr_setschedpolicy(&attr,SCHED_RR);
-    pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
+  //  pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
     param.sched_priority = sched_priority;
     pthread_attr_setschedparam(&attr,&param);
     
@@ -1386,13 +1387,13 @@ static pthread_t sSystemServerHandle;
 void *connect_loop(void *ptr)
 {
     TelnetServerInit();
-    //ÉèÖÃÒ»¸ösocketµØÖ·½á¹¹server_addr,´ú±í·şÎñÆ÷internetµØÖ·, ¶Ë¿Ú
+    //è®¾ç½®ä¸€ä¸ªsocketåœ°å€ç»“æ„server_addr,ä»£è¡¨æœåŠ¡å™¨internetåœ°å€, ç«¯å£
     struct sockaddr_in server_addr;
-    bzero(&server_addr,sizeof(server_addr)); //°ÑÒ»¶ÎÄÚ´æÇøµÄÄÚÈİÈ«²¿ÉèÖÃÎª0
+    bzero(&server_addr,sizeof(server_addr)); //æŠŠä¸€æ®µå†…å­˜åŒºçš„å†…å®¹å…¨éƒ¨è®¾ç½®ä¸º0
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htons(INADDR_ANY);
     server_addr.sin_port = htons(TELNET_SERVER_PORT);
-    //´´½¨ÓÃÓÚinternetµÄÁ÷Ğ­Òé(TCP)socket,ÓÃserver_socket´ú±í·şÎñÆ÷socket
+    //åˆ›å»ºç”¨äºinternetçš„æµåè®®(TCP)socket,ç”¨server_socketä»£è¡¨æœåŠ¡å™¨socket
     int server_socket = socket(PF_INET,SOCK_STREAM,0);
     if( server_socket < 0)
     {
@@ -1403,30 +1404,30 @@ void *connect_loop(void *ptr)
    int opt =1;
    setsockopt(server_socket,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
      
-    //°ÑsocketºÍsocketµØÖ·½á¹¹ÁªÏµÆğÀ´
+    //æŠŠsocketå’Œsocketåœ°å€ç»“æ„è”ç³»èµ·æ¥
     if( bind(server_socket,(struct sockaddr*)&server_addr,sizeof(server_addr)))
     {
         DEBUG(printf("Server Bind Port : 23 Failed!"));
         exit(1);
     }
     printf("waiting for connect...\r\n");
-    //server_socketÓÃÓÚ¼àÌı
+    //server_socketç”¨äºç›‘å¬
     if ( listen(server_socket, 5) )
     {
         DEBUG(printf("Server Listen Failed!"));
         exit(1);
     }
     
-    while (1) //·şÎñÆ÷¶ËÒªÒ»Ö±ÔËĞĞ
+    while (1) //æœåŠ¡å™¨ç«¯è¦ä¸€ç›´è¿è¡Œ
     {
-        //¶¨Òå¿Í»§¶ËµÄsocketµØÖ·½á¹¹client_addr
+        //å®šä¹‰å®¢æˆ·ç«¯çš„socketåœ°å€ç»“æ„client_addr
         struct sockaddr_in client_addr;
         socklen_t length = sizeof(client_addr);
-        //½ÓÊÜÒ»¸öµ½server_socket´ú±íµÄsocketµÄÒ»¸öÁ¬½Ó
-        //Èç¹ûÃ»ÓĞÁ¬½ÓÇëÇó,¾ÍµÈ´ıµ½ÓĞÁ¬½ÓÇëÇó--ÕâÊÇacceptº¯ÊıµÄÌØĞÔ
-        //acceptº¯Êı·µ»ØÒ»¸öĞÂµÄsocket,Õâ¸ösocket(new_server_socket)ÓÃÓÚÍ¬Á¬½Óµ½µÄ¿Í»§µÄÍ¨ĞÅ
-        //new_server_socket´ú±íÁË·şÎñÆ÷ºÍ¿Í»§¶ËÖ®¼äµÄÒ»¸öÍ¨ĞÅÍ¨µÀ
-        //acceptº¯Êı°ÑÁ¬½Óµ½µÄ¿Í»§¶ËĞÅÏ¢ÌîĞ´µ½¿Í»§¶ËµÄsocketµØÖ·½á¹¹client_addrÖĞ
+        //æ¥å—ä¸€ä¸ªåˆ°server_socketä»£è¡¨çš„socketçš„ä¸€ä¸ªè¿æ¥
+        //å¦‚æœæ²¡æœ‰è¿æ¥è¯·æ±‚,å°±ç­‰å¾…åˆ°æœ‰è¿æ¥è¯·æ±‚--è¿™æ˜¯acceptå‡½æ•°çš„ç‰¹æ€§
+        //acceptå‡½æ•°è¿”å›ä¸€ä¸ªæ–°çš„socket,è¿™ä¸ªsocket(new_server_socket)ç”¨äºåŒè¿æ¥åˆ°çš„å®¢æˆ·çš„é€šä¿¡
+        //new_server_socketä»£è¡¨äº†æœåŠ¡å™¨å’Œå®¢æˆ·ç«¯ä¹‹é—´çš„ä¸€ä¸ªé€šä¿¡é€šé“
+        //acceptå‡½æ•°æŠŠè¿æ¥åˆ°çš„å®¢æˆ·ç«¯ä¿¡æ¯å¡«å†™åˆ°å®¢æˆ·ç«¯çš„socketåœ°å€ç»“æ„client_addrä¸­
         int new_server_socket = accept(server_socket,(struct sockaddr*)&client_addr,&length);
         if ( new_server_socket < 0)
         {
