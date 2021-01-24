@@ -1,6 +1,6 @@
-#include "TelnetCliApi.h"
 #include "TelnetCmd.h"
 #include <sys/prctl.h>  
+#include "TelnetServer.h"
 
 /*
                    _ooOoo_
@@ -30,140 +30,7 @@
 */
 
 TELNET_S_LOGINWORD stTelnetLoginWord;
-
-
-
-
-static TELNET_CLI_S_COMMAND cli_cmd_list[]={
-    {"help",    CLI_NULL,    CLI_NULL,"get help,show cmd list",0,CLI_NULL},
-    {"ls",    CLI_NULL,    CLI_NULL,  "show cmd list",0,CLI_NULL},
-    {"history", CLI_NULL,       CLI_NULL,       "get history cmd",0,CLI_NULL},
-    {CLI_NULL, CLI_NULL,       CLI_NULL,       CLI_NULL,0,CLI_NULL}
-};
-
-
-TELNET_CLI_S_CMD_LIST_PTR g_pstCliCmdList=CLI_NULL;
-
-int ShowCmd(TELNET_CLI_S_COMMAND *pstCliCmd,FILE *fp)
-{
-    while(pstCliCmd)
-    {
-        if(pstCliCmd->pcName)
-        {
-            fprintf(fp, "%-20s%s\r\n",pstCliCmd->pcName,pstCliCmd->pcCmdHelp);
-        }
-        #if 0
-        if(pstCliCmd->pChildren)
-        {
-            fprintf(fp, "---sub-->");
-            ShowCmd(pstCliCmd->pChildren,fp);
-        }
-        #endif
-        pstCliCmd = pstCliCmd->next;
-    }
-
-    return 0;
-}
-
-int cli_Gethelp(TELNET_CLI_S_COMMAND *pstCliCmdCur,FILE *client)
-{
-    fprintf(client, "Commands available:\r\n");
-
-    ShowCmd(pstCliCmdCur,client);
-
-    
-   
-   return 0;
-}
-
-
-INT32 ProcessRegisterTelnetSubCmd(TELNET_CLI_S_COMMAND *pstTelnetCmd,TELNET_CLI_S_COMMAND *parent)
-{
-    int i;
-    TELNET_CLI_S_COMMAND *pstTelnetCmdTmp = pstTelnetCmd;
-    if(CLI_NULL == pstTelnetCmdTmp)
-    {
-        return -1;
-    }
-
-    if(CLI_NULL == pstTelnetCmdTmp->pcName)
-    {
-        return -1;
-    }
-#if 0
-    if(pstTelnetCmdTmp->pChildren)
-    {
-        ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp->pChildren,pstTelnetCmdTmp);
-    }
-#endif
-    for(i = 0; pstTelnetCmdTmp[i+1].pcName; i++)
-    {
-        pstTelnetCmdTmp[i].next = &pstTelnetCmdTmp[i+1];
-        pstTelnetCmdTmp[i].parent = parent;
-        if(i != 0)
-        {
-             pstTelnetCmdTmp[i].prev = &pstTelnetCmdTmp[i-1];
-        }
-        if(pstTelnetCmdTmp[i].pChildren)
-        {
-            ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp[i].pChildren,&pstTelnetCmdTmp[i]);
-        }
-    }
-
-    pstTelnetCmdTmp[i].next = CLI_NULL;
-    if(i != 0)
-    {
-        pstTelnetCmdTmp[i].prev = &pstTelnetCmdTmp[i-1];
-    }
-    pstTelnetCmdTmp[i].parent = parent;
-    if(pstTelnetCmdTmp[i].pChildren)
-    {
-        ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp[i].pChildren,&pstTelnetCmdTmp[i]);
-    }
-    
-    return CLI_OK;
-}
-
-
-INT32 RegisterCliCommand(/*const*/ void *pstCliCmd)
-{
-    int i = 0;
-    TELNET_CLI_S_COMMAND *pstChildCliCmd;
-    TELNET_CLI_S_CMD_LIST_PTR pstCliCmdlist;
-    TELNET_CLI_S_CMD_LIST_PTR pstCliCmdEmptyPoint;
-    TELNET_CLI_S_COMMAND *pstCliCmdTmp;
-    CHECK_PTR_RET(pstCliCmd,CLI_EN_PARAM_INVALID);
-    if(CLI_NULL == g_pstCliCmdList)
-    {
-        g_pstCliCmdList =(TELNET_CLI_S_CMD_LIST_PTR)malloc(sizeof(TELNET_CLI_S_CMD_LIST));
-        if(CLI_NULL == g_pstCliCmdList)
-        {
-            return CLI_EN_MALLOC_FAILD;
-        }
-        
-        g_pstCliCmdList->pstCliCmd = cli_cmd_list;
-        ProcessRegisterTelnetSubCmd(cli_cmd_list,CLI_NULL);
-         
-    }
-    pstCliCmdTmp = (TELNET_CLI_S_COMMAND *)pstCliCmd;
-    
-    pstChildCliCmd = g_pstCliCmdList->pstCliCmd;
-
-    while(pstChildCliCmd->next)
-    {
-        pstChildCliCmd = pstChildCliCmd->next;
-    }
-    
-    if(CLI_OK == ProcessRegisterTelnetSubCmd(pstCliCmdTmp,CLI_NULL))
-    {
-        pstChildCliCmd->next = pstCliCmdTmp;
-        pstCliCmdTmp->prev = pstChildCliCmd;
-    }
-    
-
-    return CLI_OK;
-        
-}
+extern TELNET_CLI_S_CMD_LIST_PTR g_pstCliCmdList;
 
 
 CLI_EN_RET TelnetCliChangeDirectoryName(CLI_S_CMD_DEF *pstCliCmdDefParam,TELNET_CLI_S_COMMAND *pstCliCmdCur,DIR_EN_CHANGE_MODE eMode)
@@ -1441,4 +1308,14 @@ void *connect_loop(void *ptr)
     }
     return CLI_NULL;
 }
+
+void TcliInit(void)
+{
+    pthread_t sConnetLoopHandle;
+
+    RegisterCliCommand(NULL);
+    SystemCreateThread(&sConnetLoopHandle,THREAD_STACK_SIZE,connect_loop,NULL,"tcli_main_loop",95);
+    
+}
+
 

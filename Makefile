@@ -1,19 +1,21 @@
 #!bash/bin
-SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c = .o)
+LIBNAME = libcli
+SHARED = $(LIBNAME).so
+C_SRCS = $(wildcard *.c)
+OBJS = $(C_SRCS:.c = .o)
+#CC = aarch64-linux-gnu-gcc
 CC = gcc
-INCLUDES = -I./
-LIBS = -L./
-CCFLAGS = -g -Wall -glibc
+CFLAGS = -g -Wall -fPIC
 LDFLAGS = -lpthread -pthread 
 
-server : $(OBJS)
-	$(CC) $^ -o $@ $(INCLUDES) $(LIBS) $(LDFLAGS)
+C_OBJS = $(C_SRCS:.c=.o)
 
-%.o : %.c
-	$(CC) -c $< $(CCFLAGS)
+all: $(SHARED)
 
-all:$(server)
+$(SHARED): $(C_OBJS) 
+	$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
+	
 clean:
-	$(RM) $(OBJ) server
+	$(RM) $(C_OBJ) server $(SHARED) *.o
+	
 .PHONY:clean all

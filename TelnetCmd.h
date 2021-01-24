@@ -2,7 +2,8 @@
 #define __TLENET_CMD_H__
 #include "common.h"
 #include <ctype.h>
-#include "TelnetCliApi.h"
+//#include "TelnetCliApi.h"
+#include "tcli.h"
 
 
 extern void my_register_cmd(void);

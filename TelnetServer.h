@@ -2,8 +2,9 @@
 #define __TELNET_SERVER_H__
 
 #include "common.h"
+#include "tcli.h"
 
-#define TELNET_SERVER_PORT   (8888)  //非默认23号的端口需要使用telnet ip port 访问 eg: telnet 192.168.1.1 1000
+#define TELNET_SERVER_PORT   (23)  //非默认23号的端口需要使用telnet ip port 访问 eg: telnet 192.168.1.1 1000
 
 #define TELNET_SHOW_COMMAND   "\xff\xfb\x01"
 #define NEW_LINE    "\r\n"
@@ -26,31 +27,6 @@
 #define CMD_LEN     32         //命令名占用的最大字符长度
 #define CMD_BUF_LEN 256         //命令缓存的最大长度
 typedef void (*pCallbackFunc)(void* ptr);
-
-
-#define DECLARE_TELNET_CLI_CMD_MACRO(name,child,Cbfunc,help,usermode)  \
-{                                                               \
-    #name,                                                      \
-    child,                                                      \
-    Cbfunc,                                                     \
-    #help,                                                      \
-    usermode,                                                   \
-    CLI_NULL,                                                    \
-    CLI_NULL,                                                   \
-    CLI_NULL                                                    \
-}
-
-#define DECLARE_TELNET_CLI_CMD_MACRO_END()                             \
-{                                                               \
-    CLI_NULL,                                                   \
-    CLI_NULL,                                                   \
-    CLI_NULL,                                                   \
-    CLI_NULL,                                                   \
-    CLI_NULL,                                                   \
-    CLI_NULL,                                                    \
-    CLI_NULL,                                                   \
-    CLI_NULL                                                    \
-}
 
 
 typedef enum DIR_E_CHANGE_MODEtag
@@ -110,7 +86,7 @@ typedef struct TELNET_S_LOGINWORDtag
     INT8 acLoginFail[100];
 }TELNET_S_LOGINWORD,*TELNET_S_LOGINWORD_PTR;
 
-
+#if 0
 typedef struct TELNET_CLI_S_COMMANDtag
 {
     INT8 *pcName;
@@ -122,6 +98,7 @@ typedef struct TELNET_CLI_S_COMMANDtag
     struct TELNET_CLI_S_COMMANDtag *parent;
     struct TELNET_CLI_S_COMMANDtag *prev;
 }TELNET_CLI_S_COMMAND,*TELNET_CLI_S_COMMAND_PTR;
+#endif
 
 typedef struct TELNET_CLI_S_CMD_LISTtag
 {
@@ -144,6 +121,8 @@ typedef struct CLI_S_CMD_DEFtag
     CLI_CMD_S_HISTORY stCliCmdHistory;
 }CLI_S_CMD_DEF,*CLI_S_CMD_DEF_PTR;
 
+typedef void *(*PTHREAD_FUNC) (void *);
+
 extern  int cli_Gethelp(TELNET_CLI_S_COMMAND *pstCliCmdCur,FILE *client);
 extern void *TelnetServerThread(void *pArg);
 extern void TelnetServerInit(void);
@@ -155,6 +134,8 @@ extern CLI_EN_RET TelnetCliAnalyzeAndProcessCmd(FILE *client,
                                            UINT32 rec_num,
                                            CLI_S_CMD_DEF *pstCliCmdDef);
 
-
+extern void *connect_loop(void *ptr);
+extern int SystemCreateThread(pthread_t *thread_handle,int stack_size,PTHREAD_FUNC func,
+                            void *arg,const char *name,int sched_priority);
 
 #endif //__TELNET_SERVER_H__

@@ -4,7 +4,7 @@
 static INT32 g_i32SocketId = -1;
 
 static TELNET_S_TRACE_ID astTraceId[CONNECT_NUM_MAX];
-
+static DEBUG_EN_LEVEL g_elevel = DEBUG_EN_TRACE_ERROR; //可打印的最高级别
 
 CLI_EN_RET TelnetSetTraceSocked(INT32 i32SocketId,pthread_t tid)
 {
@@ -117,6 +117,11 @@ void TelnetTracePrint(const DEBUG_EN_LEVEL enLevel, char *pcpathname,
     CHECK_PTR_VOID(pcpathname);
     CHECK_PTR_VOID(fmt);
 
+    if(enLevel != 0 && enLevel < g_elevel)
+    {
+        return ;
+    }
+
     if ((pbuffer = malloc(size)) == NULL)
     {
        return ;
@@ -200,5 +205,24 @@ void TelnetTracePrint(const DEBUG_EN_LEVEL enLevel, char *pcpathname,
     FREE_MEM(pbuffer);
 
     return;
+}
+
+
+void TelnetTraceLevelSet(DEBUG_EN_LEVEL eLevel)
+{
+    if(eLevel < DEBUG_EN_TRACE_NONE || eLevel >= DEBUG_EN_TRACE_BUTT)
+    {
+        TELNET_TRACE("set %d error,current level is %d.\n",eLevel,g_elevel);
+        return ;
+    }
+    g_elevel = eLevel;
+    TELNET_TRACE("set level to %d succ.\n",eLevel,g_elevel);
+    
+    return ;
+}
+
+DEBUG_EN_LEVEL TelnetTraceGetLevel()
+{
+    return g_elevel;
 }
 

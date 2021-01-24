@@ -1,5 +1,7 @@
+#include "tcli.h"
 #include "TelnetCmd.h"
-#include "TelnetCliApi.h"
+#include "TelnetTrace.h"
+
 
 
 
@@ -10,36 +12,144 @@
 
 BOOL g_bThreadRun = false;
 
+extern int cli_GetVersion(INT32 argc,char *argv[],void *pvReserve);
+extern int setTrace(int32_t argc,char *argv[]);
 
-/*打印每个参数*/
-int cli_handle_arg(INT32 argc,char *argv[],void *pvReserve)
+
+static TELNET_CLI_S_COMMAND cli_cmd_list[]={
+    {"help",    CLI_NULL,    CLI_NULL,"get help,show cmd list",0,CLI_NULL},
+    {"ls",    CLI_NULL,    CLI_NULL,  "show cmd list",0,CLI_NULL},
+    {"history", CLI_NULL,       CLI_NULL,       "get history cmd",0,CLI_NULL},
+    DECLARE_CLI_CMD_MACRO(trace,CLI_NULL,setTrace,trace control,0),
+    {CLI_NULL, CLI_NULL,       CLI_NULL,       CLI_NULL,0,CLI_NULL}
+};
+
+
+TELNET_CLI_S_CMD_LIST_PTR g_pstCliCmdList=CLI_NULL;
+
+int ShowCmd(TELNET_CLI_S_COMMAND *pstCliCmd,FILE *fp)
 {
-   UINT32 i;
-   
-    if(argc==0)
+    while(pstCliCmd)
     {
-       TRACE_ERROR("no argument\r\n");
-    }
-    else
-    {
-       for(i=0;i<argc;i++)
-       {
-           TRACE_INFO("[%d]:%s\r\n",i,argv[i]);
-       }
+        if(pstCliCmd->pcName)
+        {
+            fprintf(fp, "%-20s%s\r\n",pstCliCmd->pcName,pstCliCmd->pcCmdHelp);
+        }
+        #if 0
+        if(pstCliCmd->pChildren)
+        {
+            fprintf(fp, "---sub-->");
+            ShowCmd(pstCliCmd->pChildren,fp);
+        }
+        #endif
+        pstCliCmd = pstCliCmd->next;
     }
 
     return 0;
 }
 
-
-
-int cli_printf_hello(INT32 argc,char *argv[],void *pvReserve)
+int cli_Gethelp(TELNET_CLI_S_COMMAND *pstCliCmdCur,FILE *client)
 {
-    
-   g_bThreadRun = !g_bThreadRun;
+    fprintf(client, "Commands available:\r\n");
 
+    ShowCmd(pstCliCmdCur,client);
+
+    
+   
    return 0;
 }
+
+
+INT32 ProcessRegisterTelnetSubCmd(TELNET_CLI_S_COMMAND *pstTelnetCmd,TELNET_CLI_S_COMMAND *parent)
+{
+    int i;
+    TELNET_CLI_S_COMMAND *pstTelnetCmdTmp = pstTelnetCmd;
+    if(CLI_NULL == pstTelnetCmdTmp)
+    {
+        return -1;
+    }
+
+    if(CLI_NULL == pstTelnetCmdTmp->pcName)
+    {
+        return -1;
+    }
+#if 0
+    if(pstTelnetCmdTmp->pChildren)
+    {
+        ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp->pChildren,pstTelnetCmdTmp);
+    }
+#endif
+    for(i = 0; pstTelnetCmdTmp[i+1].pcName; i++)
+    {
+        pstTelnetCmdTmp[i].next = &pstTelnetCmdTmp[i+1];
+        pstTelnetCmdTmp[i].parent = parent;
+        if(i != 0)
+        {
+             pstTelnetCmdTmp[i].prev = &pstTelnetCmdTmp[i-1];
+        }
+        if(pstTelnetCmdTmp[i].pChildren)
+        {
+            ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp[i].pChildren,&pstTelnetCmdTmp[i]);
+        }
+    }
+
+    pstTelnetCmdTmp[i].next = CLI_NULL;
+    if(i != 0)
+    {
+        pstTelnetCmdTmp[i].prev = &pstTelnetCmdTmp[i-1];
+    }
+    pstTelnetCmdTmp[i].parent = parent;
+    if(pstTelnetCmdTmp[i].pChildren)
+    {
+        ProcessRegisterTelnetSubCmd(pstTelnetCmdTmp[i].pChildren,&pstTelnetCmdTmp[i]);
+    }
+    
+    return CLI_OK;
+}
+
+
+INT32 RegisterCliCommand(/*const*/ void *pstCliCmd)
+{
+    int i = 0;
+    TELNET_CLI_S_COMMAND *pstChildCliCmd;
+    TELNET_CLI_S_CMD_LIST_PTR pstCliCmdlist;
+    TELNET_CLI_S_CMD_LIST_PTR pstCliCmdEmptyPoint;
+    TELNET_CLI_S_COMMAND *pstCliCmdTmp;
+    //CHECK_PTR_RET(pstCliCmd,CLI_EN_PARAM_INVALID);
+    if(CLI_NULL == g_pstCliCmdList)
+    {
+        g_pstCliCmdList =(TELNET_CLI_S_CMD_LIST_PTR)malloc(sizeof(TELNET_CLI_S_CMD_LIST));
+        if(CLI_NULL == g_pstCliCmdList)
+        {
+            return CLI_EN_MALLOC_FAILD;
+        }
+        
+        g_pstCliCmdList->pstCliCmd = cli_cmd_list;
+        ProcessRegisterTelnetSubCmd(cli_cmd_list,CLI_NULL);
+         
+    }
+
+    CHECK_PTR_RET(pstCliCmd,CLI_EN_PARAM_INVALID);
+    pstCliCmdTmp = (TELNET_CLI_S_COMMAND *)pstCliCmd;
+    
+    pstChildCliCmd = g_pstCliCmdList->pstCliCmd;
+
+    while(pstChildCliCmd->next)
+    {
+        pstChildCliCmd = pstChildCliCmd->next;
+    }
+    
+    if(CLI_OK == ProcessRegisterTelnetSubCmd(pstCliCmdTmp,CLI_NULL))
+    {
+        pstChildCliCmd->next = pstCliCmdTmp;
+        pstCliCmdTmp->prev = pstChildCliCmd;
+    }
+    
+
+    return CLI_OK;
+        
+}
+
 
 
 
@@ -66,7 +176,7 @@ void GetCompileTime(void)
     }
   }
 
-  TRACE("Ver:%s,Compile time is = %d-%d-%d %d:%d:%d\n",CLI_VERSION, year, month, day, hour, minutes, seconds);
+  TELNET_TRACE("Ver:%s,Compile time is = %d-%d-%d %d:%d:%d\n",CLI_VERSION, year, month, day, hour, minutes, seconds);
 }
 
 
@@ -75,6 +185,26 @@ void GetVersion(int32_t argc,char *argv[])
 {
    GetCompileTime();
    return ;
+}
+
+int setTrace(int32_t argc,char *argv[])
+{
+   int ilevel = 0;
+   if(argc >= 2)
+   {
+    ilevel = atoi(argv[1]);
+    TelnetTraceLevelSet((DEBUG_EN_LEVEL)ilevel);     
+   }
+   else
+   {
+      TELNET_TRACE("trace [0/1/2/3]\n");
+      TELNET_TRACE("0 : off\n");
+      TELNET_TRACE("1 : info\n");
+      TELNET_TRACE("2 : warning\n");
+      TELNET_TRACE("3 : error\n");
+      TELNET_TRACE("current level is %d .\n",TelnetTraceGetLevel());  
+   }
+   return 0;
 }
 
 /*打印字符串:Hello world!*/
@@ -97,7 +227,6 @@ static TELNET_S_CLICMD my_cli_cmd_list_subSecond[]={
 
 static TELNET_S_CLICMD my_cli_cmd_list_Second[]={
     DECLARE_CLI_CMD_MACRO(dp,CLI_NULL,cli_GetVersion,"cli_GetVersion",0),
-    DECLARE_CLI_CMD_MACRO(network,CLI_NULL,cli_printf_hello,"cli_printf_hello",0),
     DECLARE_CLI_CMD_MACRO(hal,CLI_NULL,cli_GetVersion,"cli_GetVersion",0),
     DECLARE_CLI_CMD_MACRO(bt,CLI_NULL,cli_GetVersion,"macro test",0),
     DECLARE_CLI_CMD_MACRO_END()
@@ -105,7 +234,6 @@ static TELNET_S_CLICMD my_cli_cmd_list_Second[]={
 
 
 static TELNET_S_CLICMD my_cli_cmd_list_sub_hello[]={
-    DECLARE_CLI_CMD_MACRO(hello,CLI_NULL,cli_printf_hello,"show hello world info",0),
     DECLARE_CLI_CMD_MACRO(second_directory,my_cli_cmd_list_subSecond,CLI_NULL,"second directory",0),
     DECLARE_CLI_CMD_MACRO(verSion,CLI_NULL,cli_GetVersion,"get the version",0),   
     DECLARE_CLI_CMD_MACRO_END()
@@ -116,9 +244,7 @@ static TELNET_S_CLICMD my_cli_cmd_list_sub_hello[]={
 /*命令表*/
 static TELNET_S_CLICMD my_cli_cmd_list[]={
 
-    DECLARE_CLI_CMD_MACRO(hellotest,CLI_NULL,cli_printf_hello,"print hello world test",0),
     DECLARE_CLI_CMD_MACRO(sub_dir,my_cli_cmd_list_sub_hello,CLI_NULL,"sub directory",0),
-    DECLARE_CLI_CMD_MACRO(arg,CLI_NULL,cli_handle_arg,"show your input cmd",0), 
     DECLARE_CLI_CMD_MACRO(version,CLI_NULL,cli_GetVersion,"show version",0),   
     DECLARE_CLI_CMD_MACRO_END()
 };
@@ -135,38 +261,6 @@ void my_register_cmd(void)
     }
     
     return ;
-}
-
-
-
-UINT32 ulj =0;
-void printf_helloworld(void)
-{
-    static INT32 sTesti =0;  
-    static UINT32 uli = 0;
-    TRACE_ERROR("Hello world!,sTesti=%#x,%#x,%#x\r\n",sTesti,ulj,uli);
-    TRACE_INFO("Hello world!,sTesti=%#x,%#x,%#x\r\n",sTesti,ulj,uli);
-    TRACE_WARNING("Hello world!,sTesti=%#x,%#x,%#x\r\n",sTesti,ulj,uli);
-    ulj++;
-    sTesti++;
-    uli++;
-    return ;
-}
-
-
-void *ThreadTestMain(void *pArg)
-{
-
-    while(1)
-    {
-        if(g_bThreadRun)
-        {
-            printf_helloworld();
-        }
-        sleep(2);
-    }
-
-    return NULL;
 }
 
 
